@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  rainybot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=rainybot
+      - DB_USER=rainybot
+      - DB_PASSWORD=secret
+      - GEMINI_API_KEY=
+      - RAINYBOT_TOKEN=
+      - DEVBOT_TOKEN=
+    ports:
+      - "5000:80"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rainybot
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: rainybot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
